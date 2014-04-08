@@ -1,0 +1,58 @@
+- name: Install packages
+  apt: pkg={{ ruby_packages }} state=latest
+
+- name: Checkout rbenv
+  git: repo=https://github.com/sstephenson/rbenv.git
+       dest={{ ruby_rbenv_root }}
+       version={{ ruby_rbenv_version }}
+
+- name: Checkout ruby-build
+  git: repo=https://github.com/sstephenson/ruby-build.git
+       dest={{ ruby_rbenv_root }}/plugins/ruby-build
+       version={{ ruby_ruby_build_version }}
+  register: ruby_build_checkout
+
+- name: Install ruby-build
+  shell: "{{ ruby_rbenv_root }}/plugins/ruby-build/install.sh"
+  when: ruby_build_checkout|changed
+
+- name: Fix rbenv permissions
+  shell: "chown -R {{ user }}:{{ user }} {{ ruby_rbenv_root }}"
+  changed_when: False
+  failed_when: False
+
+- name: Check Ruby
+  shell: su -c "rbenv versions --bare | grep {{ ruby_version }} | sed -e 's/\s//g'" {{ user }}
+  register: ruby_installed
+  changed_when: False
+  failed_when: False
+
+- name: Install Ruby
+  shell: su -c "rbenv install {{ ruby_version }}" {{ user }}
+  when: ruby_installed.stdout != '{{ ruby_version }}'
+
+- name: Get default Ruby
+  shell: su -c "rbenv global" {{ user }}
+  register: ruby_rbenv_global
+  changed_when: False
+  failed_when: False
+
+- name: Set default Ruby
+  shell: su -c "rbenv global {{ ruby_version }}" {{ user }}
+  when: ruby_rbenv_global.stdout != '{{ ruby_version }}'
+
+- name: Check installed gems
+  shell: su -c "gem list -i -v {{ item.version }} {{ item.name }}" {{ user }}
+  register: ruby_installed_gems
+  changed_when: False
+  failed_when: False
+  with_items: ruby_gems
+
+- name: Install gems
+  shell: su -c "gem install --no-ri --no-rdoc {{ item.item.name }} -v {{ item.item.version }}" {{ user }}
+  when: item.stdout == "false"
+  with_items: ruby_installed_gems.results
+
+- name: Rehash gems
+  shell: su -c "rbenv rehash" {{ user }}
+  changed_when: False

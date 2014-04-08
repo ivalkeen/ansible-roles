@@ -1,0 +1,22 @@
+# PostgreSQL configuration file
+data_directory = '/var/lib/postgresql/{{ postgres_version }}/main'
+datestyle = 'iso, mdy'
+default_text_search_config = 'pg_catalog.english'
+external_pid_file = '/var/run/postgresql/{{ postgres_version }}-main.pid'
+hba_file = '/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf'
+ident_file = '/etc/postgresql/{{ postgres_version }}/main/pg_ident.conf'
+log_line_prefix = '%t '
+max_connections = 100
+ssl = on
+ssl_cert_file = '/etc/ssl/certs/ssl-cert-snakeoil.pem'
+ssl_key_file = '/etc/ssl/private/ssl-cert-snakeoil.key'
+unix_socket_directories = '/var/run/postgresql'
+port = 5432
+
+listen_addresses = '{{ postgres_listen_addresses }}'
+shared_buffers = '{{ postgres_shared_buffers }}'
+fsync = '{{ postgres_fsync }}'
+full_page_writes = '{{ postgres_full_page_writes }}'
+synchronous_commit = '{{ postgres_synchronous_commit }}'
+checkpoint_segments = '{{ postgres_checkpoint_segments }}'
+checkpoint_timeout = '{{ postgres_checkpoint_timeout }}'

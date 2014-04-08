@@ -1,0 +1,13 @@
+- name: Install PhantomJS prerequisites
+  apt: pkg="libfreetype6,fontconfig" state="latest"
+
+- name: Check PhantomJS
+  shell: phantomjs --version
+  register: phantomjs_installed
+  changed_when: False
+  failed_when: False
+
+- name: Install PhantomJS
+  script: install.sh phantomjs-{{ phantomjs_version }}-linux-x86_64
+  when: phantomjs_installed.stdout != "{{ phantomjs_version }}"
+

@@ -1,0 +1,20 @@
+- name: Install postgres
+  apt: pkg="postgresql-{{ postgres_version }},python-psycopg2" state=latest
+
+- name: Set postgres user password
+  shell: "sudo -u postgres psql postgres -c \"alter user postgres with encrypted password '{{ postgres_password }}'\""
+  changed_when: False
+
+- name: Configure postgres config
+  template: src=postgresql.conf.j2
+            dest=/etc/postgresql/{{ postgres_version }}/main/postgresql.conf
+            owner=postgres group=postgres
+  notify:
+    - restart postgres
+
+- name: Configure postgres access config
+  template: src=pg_hba.conf.j2
+            dest=/etc/postgresql/{{ postgres_version }}/main/pg_hba.conf
+            owner=postgres group=postgres
+  notify:
+    - restart postgres

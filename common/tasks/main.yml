@@ -1,0 +1,17 @@
+- name: Create user
+  user: name={{ user }} password={{ password }} groups=sudo state=present
+
+- name: Install packages
+  apt: pkg={{ common_packages }} state=latest
+
+- name: Get current shell
+  shell: cat /etc/passwd | grep {{ user }} | awk -F ":" '{print $7}'
+  register: current_shell
+  changed_when: False
+
+- name: Change shell to zsh
+  shell: chsh -s /bin/zsh {{ user }}
+  when: current_shell.stdout != '/bin/zsh'
+
+- name: Configure zsh
+  template: src=zshenv.j2 dest=/home/{{ user }}/.zshenv owner={{ user }} group={{ user }} mode=0644

@@ -1,0 +1,9 @@
+- name: Install nodejs repository
+  apt_repository: repo="ppa:chris-lea/node.js" state=present
+
+- name: Install nodejs
+  apt: pkg="nodejs" state="latest"
+
+- name: Install npm modules
+  npm: name={{ item.name }} version={{ item.version }} global=yes
+  with_items: nodejs_npm_packages

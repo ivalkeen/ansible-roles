@@ -1,0 +1,5 @@
+- name: Install nginx repository
+  apt_repository: repo="ppa:nginx/stable" state=present
+
+- name: Install nginx
+  apt: pkg="nginx" state="latest"

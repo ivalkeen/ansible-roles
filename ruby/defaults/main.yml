@@ -1,0 +1,8 @@
+---
+ruby_packages: build-essential,libssl-dev,libxml2-dev,libxslt1-dev,libreadline-dev,libcurl4-openssl-dev,libqtwebkit-dev,imagemagick,ghostscript,libzbar0,libjpeg62,libsm6
+ruby_rbenv_root: /home/{{ user | mandatory }}/.rbenv
+ruby_rbenv_version: v0.4.0
+ruby_ruby_build_version: master
+ruby_version: 2.1.1
+ruby_gems:
+  - { name: 'bundler', version: '1.6.1' }
