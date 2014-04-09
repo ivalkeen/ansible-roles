@@ -1,6 +1,9 @@
 - name: Create user
   user: name={{ user }} password={{ password }} groups=sudo state=present
 
+- name: add git repository
+  apt_repository: repo="ppa:git-core/ppa" state=present
+
 - name: Install packages
   apt: pkg={{ common_packages }} state=latest
 

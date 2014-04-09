@@ -50,7 +50,7 @@
 
 - name: Install gems
   shell: su -c "gem install --no-ri --no-rdoc {{ item.item.name }} -v {{ item.item.version }}" {{ user }}
-  when: item.stdout == "false"
+  when: ruby_installed_gems is defined and item.stdout == "false"
   with_items: ruby_installed_gems.results
 
 - name: Rehash gems

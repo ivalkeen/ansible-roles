@@ -1,2 +1,2 @@
 ---
-common_packages: zsh,git-core,tmux
+common_packages: zsh,git,tmux
