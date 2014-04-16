@@ -1,0 +1,36 @@
+- name: install ctags
+  apt: pkg="exuberant-ctags" state=latest
+
+- name: get nginx user
+  shell: cat /etc/nginx/nginx.conf | grep 'user {{ user }};'
+  register: rails_app_user
+  changed_when: False
+  failed_when: False
+
+- name: setup nginx user
+  shell: sed -i 's/user .*;/user {{ user }};/' /etc/nginx/nginx.conf
+  when: rails_app_user.stdout == ''
+  notify:
+    - restart nginx
+
+- name: install site in nginx
+  template: src=nginx.j2
+            dest=/etc/nginx/sites-enabled/{{ rails_app_name }}
+            owner={{ user }}
+            group={{ user }}
+  notify:
+    - restart nginx
+
+- name: install bundler gems
+  shell: su -c "cd {{ rails_app_project_root }} && bundle install --binstubs=bin/stubs --path=vendor --jobs={{ rails_app_bundler_jobs }}" {{ user }}
+  changed_when: False
+
+- name: check if database exists
+  shell: su -c "cd {{ rails_app_project_root }} && bin/stubs/rake db:create db:version | grep 'Current version'" {{ user }}
+  register: rails_app_db_exists
+  changed_when: False
+  failed_when: False
+
+- name: setup database
+  shell: su -c "cd {{ rails_app_project_root }} && bin/stubs/rake db:setup" {{ user }}
+  when: "rails_app_db_exists.stdout == 'Current version: 0'"

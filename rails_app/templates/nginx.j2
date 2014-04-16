@@ -1,0 +1,29 @@
+upstream rails_app {
+  server unix:{{ rails_app_project_root }}/tmp/sockets/{{ rails_app_name }}.sock fail_timeout=0;
+}
+
+server {
+  listen 80;
+  server_name *.{{ rails_app_name }};
+
+  root {{ rails_app_project_root }}/public;
+  try_files $uri/index.html $uri @rails_app;
+
+  location @rails_app {
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_pass http://rails_app;
+  }
+
+  access_log {{ rails_app_project_root }}/log/nginx.access.log;
+  error_log {{ rails_app_project_root }}/log/nginx.error.log;
+
+  client_max_body_size 4G;
+
+  include mime.types;
+
+  types {
+    application/font-woff woff;
+  }
+}
