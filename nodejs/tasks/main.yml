@@ -4,6 +4,12 @@
 - name: Install nodejs
   apt: pkg="nodejs" state="latest"
 
-- name: Install npm modules
+- name: Install npm modules with versions
   npm: name={{ item.name }} version={{ item.version }} global=yes
+  when: item.version is defined
+  with_items: nodejs_npm_packages
+
+- name: Install npm modules latest
+  npm: name={{ item.name }} state=latest global=yes
+  when: item.version is not defined
   with_items: nodejs_npm_packages

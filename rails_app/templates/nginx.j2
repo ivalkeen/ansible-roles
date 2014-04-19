@@ -4,7 +4,7 @@ upstream rails_app {
 
 server {
   listen 80;
-  server_name *.{{ rails_app_name }};
+  server_name {{ rails_app_name }} *.{{ rails_app_name }};
 
   root {{ rails_app_project_root }}/public;
   try_files $uri/index.html $uri @rails_app;

@@ -45,21 +45,27 @@
   shell: su -c "gem update --system" {{ user }}
   changed_when: False
 
-- name: Check installed gems
+- name: pristine gems
+  shell: su -c "gem pristine --all" {{ user }}
+  changed_when: False
+
+- name: Check installed gems with versions
   shell: su -c "gem list -i -v {{ item.version }} {{ item.name }}" {{ user }}
   register: ruby_installed_gems
   changed_when: False
   failed_when: False
   with_items: ruby_gems
+  when: item.version is defined
 
-- name: pristine gems
-  shell: su -c "gem pristine --all" {{ user }}
-  changed_when: False
-
-- name: Install gems
+- name: Install gems with versions
   shell: su -c "gem install --no-ri --no-rdoc {{ item.item.name }} -v {{ item.item.version }}" {{ user }}
   when: ruby_installed_gems is defined and item.stdout == "false"
   with_items: ruby_installed_gems.results
+
+- name: Install latest gems
+  shell: su -c "gem install --no-ri --no-rdoc {{ item.name }}" {{ user }}
+  when: item.version is not defined
+  with_items: ruby_gems
 
 - name: Rehash gems
   shell: su -c "rbenv rehash" {{ user }}
