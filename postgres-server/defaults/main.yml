@@ -7,3 +7,5 @@ postgres_synchronous_commit: on
 postgres_checkpoint_segments: 3
 postgres_checkpoint_timeout: 5min
 postgres_hba: []
+# echo -n 'postgres''postgres' | openssl md5 | sed -e 's/.* /md5/'
+postgres_password:

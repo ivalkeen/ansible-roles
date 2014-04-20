@@ -1,0 +1,5 @@
+---
+deploy_rails_puma_application: 'my_rails_app'
+deploy_rails_puma_user: 'www-data'
+deploy_rails_puma_workers: 1
+deploy_rails_puma_threads: 16

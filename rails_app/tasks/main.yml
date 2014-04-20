@@ -25,6 +25,11 @@
   shell: su -c "cd {{ rails_app_project_root }} && bundle install --binstubs=bin/stubs --path=vendor --jobs={{ rails_app_bundler_jobs }}" {{ user }}
   changed_when: False
 
+- name: install bower components
+  shell: su -c "cd {{ rails_app_project_root }} && bower install --config.interactive=0 --no-color" {{ user }}
+  register: bower_result
+  changed_when:  "bower_result.stdout != ''"
+
 - name: check if database exists
   shell: su -c "cd {{ rails_app_project_root }} && bin/stubs/rake db:create db:version | grep 'Current version'" {{ user }}
   register: rails_app_db_exists

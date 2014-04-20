@@ -1,0 +1,5 @@
+---
+deploy_rails_nginx_server_name: 'localhost example.com'
+deploy_rails_nginx_application: 'my_rails_app'
+deploy_rails_nginx_user: 'my_rails_user'
+deploy_rails_nginx_target: '/home/{{ deploy_rails_nginx_user }}/{{ deploy_rails_nginx_application }}'

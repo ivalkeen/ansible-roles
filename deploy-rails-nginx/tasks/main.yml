@@ -1,0 +1,6 @@
+- name: install site to nginx
+  template: src=site.j2 dest=/etc/nginx/sites-enabled/{{ deploy_rails_nginx_application }} owner={{ deploy_rails_nginx_user }} group={{ deploy_rails_nginx_user }} mode=0644
+
+- name: reload nginx
+  service: name=nginx state=reloaded
+
