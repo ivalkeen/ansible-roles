@@ -70,4 +70,3 @@
 - name: Rehash gems
   shell: su -c "rbenv rehash" {{ user }}
   changed_when: False
-

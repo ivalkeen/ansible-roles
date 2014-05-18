@@ -26,9 +26,10 @@
   changed_when: False
 
 - name: install bower components
-  shell: su -c "cd {{ rails_app_project_root }} && bower install --config.interactive=0 --no-color" {{ user }}
+  shell: su -c "cd {{ rails_app_project_root }} && bundle exec rake \"bower:install['--config.interactive=0']\" bower:resolve" {{ user }}
   register: bower_result
   changed_when:  "bower_result.stdout != ''"
+  when: rails_app_use_bower
 
 - name: check if database exists
   shell: su -c "cd {{ rails_app_project_root }} && bin/stubs/rake db:create db:version | grep 'Current version'" {{ user }}

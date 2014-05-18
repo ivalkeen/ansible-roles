@@ -2,3 +2,4 @@
 rails_app_project_root: '/vagrant'
 rails_app_bundler_jobs: 4
 rails_app_name: 'rails_app'
+rails_app_use_bower: False
