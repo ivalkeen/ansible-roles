@@ -1,2 +1,2 @@
 ---
-common_packages: zsh,git,tmux,language-pack-en-base
+common_packages: zsh,git,tmux,language-pack-en-base,bsdmainutils
