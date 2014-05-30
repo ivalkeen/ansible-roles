@@ -22,7 +22,7 @@
     - restart nginx
 
 - name: install bundler gems
-  shell: su -c "cd {{ rails_app_project_root }} && bundle install --binstubs=bin/stubs --path=vendor --jobs={{ rails_app_bundler_jobs }}" {{ user }}
+  shell: su -c "cd {{ rails_app_project_root }} && bundle install --binstubs=bin/stubs --jobs={{ rails_app_bundler_jobs }}" {{ user }}
   changed_when: False
 
 - name: install bower components
